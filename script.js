@@ -1,3 +1,7 @@
+const buttons = document.querySelectorAll("button");
+const resultsDiv = document.getElementById("result");
+const scoreDiv = document.getElementById("score");
+
 function getComputerChoice() {
   const randomNumber = Math.random();
 
@@ -15,7 +19,9 @@ function playGame() {
   let computerScore = 0;
 
   function playRound(humanChoice, computerChoice) {
-    humanChoice = humanChoice.toLowerCase();
+    let message = "";
+
+    humanChoice = buttons.id;
 
     if (humanChoice === computerChoice) {
       console.log("It's a tie!");
@@ -24,36 +30,31 @@ function playGame() {
       (humanChoice === "paper" && computerChoice === "rock") ||
       (humanChoice === "scissors" && computerChoice === "paper")
     ) {
-      console.log(`You win! ${humanChoice} beats ${computerChoice}`);
-      humanScore++;
-    } else {
-      console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
       computerScore++;
+      message = `Computer win!`;
+    } else {
+      humanScore++;
+      message = `You win! `;
     }
 
-    console.log(`Score → You: ${humanScore} | Computer: ${computerScore}`);
+    scoreDiv.textContent = `Score - You: ${humanScore} | Computer: ${computerScore}`;
+    resultsDiv.textContent = message;
+    if (humanScore === 5 || computerScore === 5) {
+      const winner = humanScore === 5 ? "Human" : "Computer";
+      resultsDiv.textContent = `${winner} wins the game!`;
+
+      buttons.forEach((button) => {
+        button.disabled = true;
+      });
+    }
   }
 
-  // Play 5 rounds
-  for (let i = 1; i <= 5; i++) {
-    const humanChoice = prompt(`Round ${i}: Enter rock, paper, or scissors`);
-    const computerChoice = getComputerChoice();
-
-    console.log(`You chose: ${humanChoice}`);
-    console.log(`Computer chose: ${computerChoice}`);
-
-    playRound(humanChoice, computerChoice);
-    
-  }
-
-  // Final result
-  if (humanScore > computerScore) {
-    console.log("🎉 You won the game!");
-  } else if (humanScore < computerScore) {
-    console.log("😔 Computer won the game!");
-  } else {
-    console.log("🤝 It's a draw!");
-  }
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const humanChoice = button.textContent;
+      const computerChoice = getComputerChoice();
+      playRound(humanChoice, computerChoice);
+    });
+  });
 }
-
 playGame();
